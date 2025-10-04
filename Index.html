@@ -1,0 +1,189 @@
+<!DOCTYPE html><html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BAHAMAS — Controle</title>
+<style>
+:root {
+  --bg: #05040a;
+  --panel: #0c0a16;
+  --panel-2: #0f0c1e;
+  --stroke: #201a3a;
+  --txt: #e8e7ef;
+  --muted: #b5b2c9;
+  --pink: #ff4db8;
+  --blue: #3dd1ff;
+  --green: #2af09a;
+  --yellow: #ffd166;
+  --shadow-neon: 0 0 12px rgba(255,77,184,.45),0 0 24px rgba(61,209,255,.35);
+}html, body { height: 100%; margin: 0; background: radial-gradient(1500px 800px at 20% -10%,rgba(255,77,184,.15),transparent), radial-gradient(1200px 800px at 80% 10%,rgba(61,209,255,.12),transparent), var(--bg); color: var(--txt); font: 15px/1.5 'Poppins', system-ui, sans-serif; overflow-x: hidden; }
+
+.container { max-width: 1200px; margin: 32px auto; padding: 0 16px; }
+
+header { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--stroke); }
+
+.logo img { height: 150px; filter: drop-shadow(0 0 20px rgba(255,77,184,.8)); animation: glow 2.5s ease-in-out infinite alternate; }
+
+@keyframes glow { from { filter: drop-shadow(0 0 15px rgba(255,77,184,.5)); } to { filter: drop-shadow(0 0 40px rgba(61,209,255,.6)); } }
+
+h1 { font-size: 80px; color: var(--pink); text-shadow: 0 0 10px rgba(255,77,184,.6), 0 0 25px rgba(255,77,184,.3); margin: 0; flex: 1; text-align: center; }
+
+.tab-container { display: flex; justify-content: center; gap: 15px; margin: 20px 0; }
+
+.tab { border: 1px solid var(--stroke); padding: 10px 18px; border-radius: 999px; color: var(--txt); background: linear-gradient(180deg,var(--panel),var(--panel-2)); cursor: pointer; transition: 0.3s; }
+
+.tab.active { border-color: var(--pink); box-shadow: var(--shadow-neon); }
+
+.card { background: linear-gradient(180deg,rgba(255,255,255,.04),rgba(255,255,255,0)); border: 1px solid var(--stroke); border-radius: 16px; padding: 20px; margin-top: 20px; box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+
+label { display: block; margin-bottom: 8px; }
+
+input, select { appearance: none; border: 1px solid var(--stroke); background: #070611; color: var(--txt); padding: 10px 12px; border-radius: 8px; width: 100%; font-family: inherit; margin-bottom: 12px; transition: box-shadow 0.3s, border-color 0.3s; }
+
+input:focus, select:focus { outline: none; border-color: var(--pink); box-shadow: 0 0 10px rgba(255,77,184,.4); }
+
+.btn { cursor: pointer; border: 1px solid var(--stroke); background: linear-gradient(180deg,var(--panel),var(--panel-2)); padding: 10px 16px; border-radius: 10px; color: var(--txt); transition: .3s; }
+
+.btn:hover { box-shadow: var(--shadow-neon); transform: scale(1.03); }
+
+.btn.primary { background: linear-gradient(90deg,var(--pink),var(--blue)); color: #05040a; font-weight: bold; border: none; }
+
+.table-wrapper { overflow-x: auto; }
+
+table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 15px; }
+
+th, td { padding: 12px 14px; border-bottom: 1px solid var(--stroke); }
+
+tr:hover td { background: rgba(255,255,255,.02); }
+
+.pill.ok { color: var(--green); } .pill.pending { color: var(--yellow); }
+
+.page { display: none; } .page.active { display: block; } </style>
+
+</head>
+<body>
+<div class="container">
+  <header>
+    <div class="logo"><img src="bahamas-logo.png" alt="Bahamas Logo"></div>
+    <h1>BAHAMAS</h1>
+  </header>  <div class="tab-container">
+    <button class="tab active" id="financeTab">Controle Financeiro</button>
+    <button class="tab" id="goalsTab">Metas Semanais</button>
+  </div>  <div class="page active" id="financePage">
+    <div class="card">
+      <h2>Lançamentos Financeiros</h2>
+      <form id="formFinance">
+        <label>Tipo
+          <select id="tipo">
+            <option value="entrada">Entrada</option>
+            <option value="saida">Saída</option>
+          </select>
+        </label>
+        <label>Data
+          <input type="date" id="data">
+        </label>
+        <label>Categoria
+          <input type="text" id="categoria">
+        </label>
+        <label>Valor (R$)
+          <input type="number" id="valor" step="0.01">
+        </label>
+        <button type="submit" class="btn primary">Adicionar</button>
+      </form>
+      <div class="table-wrapper">
+        <table id="financeTable">
+          <thead>
+            <tr><th>Tipo</th><th>Data</th><th>Categoria</th><th>Valor</th><th>Ações</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>  <div class="page" id="goalsPage">
+    <div class="card">
+      <h2>Metas Semanais</h2>
+      <form id="formGoals">
+        <label>Funcionário
+          <input type="text" id="funcionario">
+        </label>
+        <label>Data
+          <input type="date" id="dataMeta">
+        </label>
+        <label>Tipo
+          <select id="tipoMeta">
+            <option value="FARM">FARM</option>
+            <option value="DINHEIRO SUJO">DINHEIRO SUJO</option>
+          </select>
+        </label>
+        <label>Entregue
+          <input type="number" id="entregue">
+        </label>
+        <button type="submit" class="btn primary">Adicionar</button>
+      </form>
+      <div class="table-wrapper">
+        <table id="goalsTable">
+          <thead>
+            <tr><th>Funcionário</th><th>Data</th><th>Tipo</th><th>Entregue</th><th>Status</th><th>Ações</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div><script>
+// Alternância entre abas
+const financeTab = document.getElementById('financeTab');
+const goalsTab = document.getElementById('goalsTab');
+const financePage = document.getElementById('financePage');
+const goalsPage = document.getElementById('goalsPage');
+
+financeTab.onclick = () => {
+  financePage.classList.add('active');
+  goalsPage.classList.remove('active');
+  financeTab.classList.add('active');
+  goalsTab.classList.remove('active');
+};
+
+goalsTab.onclick = () => {
+  goalsPage.classList.add('active');
+  financePage.classList.remove('active');
+  goalsTab.classList.add('active');
+  financeTab.classList.remove('active');
+};
+
+// Controle Financeiro
+const formFinance = document.getElementById('formFinance');
+const financeTable = document.querySelector('#financeTable tbody');
+
+formFinance.addEventListener('submit', e => {
+  e.preventDefault();
+  const tipo = document.getElementById('tipo').value;
+  const data = document.getElementById('data').value;
+  const categoria = document.getElementById('categoria').value;
+  const valor = parseFloat(document.getElementById('valor').value);
+  if (!data || !categoria || isNaN(valor)) return;
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${tipo}</td><td>${data}</td><td>${categoria}</td><td>${valor.toLocaleString('pt-BR',{style:'currency',currency:'BRL'})}</td><td><button class='btn'>Editar</button><button class='btn'>Excluir</button></td>`;
+  financeTable.appendChild(tr);
+  formFinance.reset();
+});
+
+// Controle de Metas
+const formGoals = document.getElementById('formGoals');
+const goalsTable = document.querySelector('#goalsTable tbody');
+
+formGoals.addEventListener('submit', e => {
+  e.preventDefault();
+  const funcionario = document.getElementById('funcionario').value;
+  const data = document.getElementById('dataMeta').value;
+  const tipo = document.getElementById('tipoMeta').value;
+  const entregue = parseFloat(document.getElementById('entregue').value);
+  if (!funcionario || !data || isNaN(entregue)) return;
+  const status = entregue < 150000 ? 'PENDENTE' : 'OK';
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${funcionario}</td><td>${data}</td><td>${tipo}</td><td>${entregue}</td><td><span class='pill ${status==='OK'?'ok':'pending'}'>${status}</span></td><td><button class='btn'>Editar</button><button class='btn'>Excluir</button></td>`;
+  goalsTable.appendChild(tr);
+  formGoals.reset();
+});
+</script></body>
+</html>
